@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    //
+    //Register
     public function createUser(Request $request){
         # code...
         try {
@@ -51,6 +51,8 @@ class AuthController extends Controller
     }
     
 
+
+    //Login
     public function loginUser(Request $request){
         # code...
         try {
