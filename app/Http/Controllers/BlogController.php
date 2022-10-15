@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
 {
@@ -13,7 +15,12 @@ class BlogController extends Controller
      */
     public function index()
     {
-        //
+        $blog = Blog::all();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $blog
+        ], 200);
     }
 
     /**
@@ -21,10 +28,7 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+    public function create(){}
 
     /**
      * Store a newly created resource in storage.
@@ -34,7 +38,39 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make(request()->all(), [
+            'title' => 'required',
+            'slug' => 'required',
+            'description' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+            $token = csrf_token();
+            
+            $blog = new Blog();
+
+            $blog->title = $request->title;
+            $blog->slug = $request->slug;
+            $blog->description = $request->description;
+
+            $blog->save();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $blog
+            ], 201);
+
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Something went wrong',            
+        ], 500);
     }
 
     /**
@@ -45,7 +81,12 @@ class BlogController extends Controller
      */
     public function show($id)
     {
-        //
+        $blog = Blog::findOrFail($id);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $blog
+        ], 200);
     }
 
     /**
@@ -56,7 +97,31 @@ class BlogController extends Controller
      */
     public function edit($id)
     {
-        //
+        $validator = Validator::make(request()->all(), [
+            'title' => 'required',
+            'slug' => 'required',
+            'description' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+            $blog = Blog::findOrFail($id);
+
+            $blog->title = request('title');
+            $blog->slug = request('slug');
+            $blog->description = request('description');
+            
+            $blog->save();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $blog
+            ], 200);
+        }
     }
 
     /**
@@ -66,10 +131,7 @@ class BlogController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+    public function update(Request $request, $id){}
 
     /**
      * Remove the specified resource from storage.
@@ -79,6 +141,13 @@ class BlogController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $blog = Blog::findOrFail($id);
+
+        $blog->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Blog deleted successfully'
+        ], 200);
     }
 }
