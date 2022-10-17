@@ -15,6 +15,7 @@ class BlogController extends Controller
      */
     public function index()
     {
+        // Get All Data
         $blog = Blog::all();
 
         return response()->json([
@@ -38,6 +39,7 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
+        // Create New Blog
         $validator = Validator::make(request()->all(), [
             'title' => 'required',
             'slug' => 'required',
@@ -81,6 +83,7 @@ class BlogController extends Controller
      */
     public function show($id)
     {
+        // Get Blog by Id
         $blog = Blog::findOrFail($id);
 
         return response()->json([
@@ -97,6 +100,7 @@ class BlogController extends Controller
      */
     public function edit($id)
     {
+        // Edit Blog by Id
         $validator = Validator::make(request()->all(), [
             'title' => 'required',
             'slug' => 'required',
@@ -141,6 +145,7 @@ class BlogController extends Controller
      */
     public function destroy($id)
     {
+        // Delete Data
         $blog = Blog::findOrFail($id);
 
         $blog->delete();
