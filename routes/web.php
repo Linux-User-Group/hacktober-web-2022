@@ -16,7 +16,13 @@ use App\Http\Controllers\PostController;
 */
 
 Route::resource('/blogs', BlogController::class);
-Route::resource('/admin/post', PostController::class);
+// Route::group(['middleware'=>'isAdmin'], function() {
+    // });
+
+Route::middleware([isAdmin::class])->group(function(){
+    Route::resource('posts', PostController::class);
+});
+
 
 Route::get('/', function () {
     return view('welcome');
