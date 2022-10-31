@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('/blogs', BlogController::class);
+Route::resource('/admin/post', PostController::class);
 
 Route::get('/', function () {
     return view('welcome');
